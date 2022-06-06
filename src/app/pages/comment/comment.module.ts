@@ -12,6 +12,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [CommentComponent],
@@ -28,6 +29,7 @@ import { MatChipsModule } from '@angular/material/chips';
     FormsModule,
     MatInputModule,
     MatChipsModule,
+    MatPaginatorModule,
   ],
   exports: [CommentComponent],
 })
