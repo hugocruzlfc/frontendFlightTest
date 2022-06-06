@@ -1,0 +1,221 @@
+<ng-container *ngIf="noComments === 1">
+  <div class="row align-self-center" style="padding-top: 15%">
+    <div class="col-md-12" style="text-align: center">
+      <h2>Select a flight!</h2>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="noComments !== 1">
+  <div class="row" style="margin-bottom: 20px">
+    <div class="col-md-12" style="padding-left: 35%">
+      <mat-chip-list>
+        <mat-chip color="accent" selected>Comments for the flight</mat-chip>
+      </mat-chip-list>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <button
+        color="basic"
+        mat-icon-button
+        aria-label="menu"
+        matTooltip="Add new comment"
+        matTooltipPosition="right"
+        matTooltipClass="example-tooltip-red"
+        data-bs-target="#modalComment"
+        data-bs-toggle="modal"
+      >
+        <mat-icon>add_comment</mat-icon>
+      </button>
+    </div>
+    <div class="col-md-6">
+      <form class="example-form">
+        <mat-form-field class="example-full-width" appearance="fill">
+          <mat-label>Search</mat-label>
+          <input
+            type="text"
+            matInput
+            placeholder="comment description"
+            (keyup)="handleSearchByFilter($event)"
+            [(ngModel)]="searchComment"
+            name="searchComment"
+          />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </form>
+    </div>
+  </div>
+
+  <ng-container *ngIf="noComments === 2">
+    <ng-container *ngFor="let comment of comments$ | async; let i = index">
+      <hr />
+      <mat-accordion>
+        <mat-expansion-panel hideToggle>
+          <mat-expansion-panel-header>
+            <mat-panel-title> Comment {{ i + 1 }}</mat-panel-title>
+            <mat-panel-description>
+              {{ comment.comment }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <p>This is the primary content of the panel.</p>
+        </mat-expansion-panel>
+        <mat-expansion-panel
+          (opened)="panelOpenState = true"
+          (closed)="panelOpenState = false"
+        >
+          <mat-expansion-panel-header>
+            <mat-panel-description>
+              {{ panelOpenState ? "expand" : "closed" }}
+            </mat-panel-description>
+          </mat-expansion-panel-header>
+          <div class="row">
+            <div class="col-md-4">
+              <mat-panel-title> Tags </mat-panel-title>
+              <mat-panel-description>{{ comment.tags }} </mat-panel-description>
+            </div>
+            <div class="col-md-4">
+              <mat-panel-title> UserId </mat-panel-title>
+              <mat-panel-description
+                >{{ comment.userId }}
+              </mat-panel-description>
+            </div>
+            <div class="col-md-4">
+              <mat-panel-title> Date </mat-panel-title>
+              <mat-panel-description
+                >{{ comment.createdAt | date }}
+              </mat-panel-description>
+            </div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <hr />
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="noComments === 3">
+    <div class="row align-self-center" style="padding-top: 15%">
+      <div class="col-md-12" style="text-align: center">
+        <h2>The selected flight has no comments!</h2>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+
+<!-- modal -->
+<div class="modal fade" id="modalComment">
+  <div class="modal-dialog modal-dialog" role="document">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <mat-card>
+          <div class="modal-header">
+            <h3 class="modal-title" id="exampleModalLabel">
+              Create New Comment
+            </h3>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-12">
+                <form
+                  (ngSubmit)="handleCreateComment()"
+                  [formGroup]="commentForm"
+                >
+                  <div class="mb-3">
+                    <label for="comment" class="form-label">Comment</label>
+                    <input
+                      [ngClass]="{
+                        'is-invalid':
+                          commentForm.get('comment')?.errors &&
+                          commentForm.get('comment')?.touched,
+                        'is-valid':
+                          commentForm.get('comment')?.touched &&
+                          commentForm.get('comment')?.valid
+                      }"
+                      type="text"
+                      class="form-control"
+                      id="comment"
+                      name="comment"
+                      placeholder="Comment description"
+                      formControlName="comment"
+                    />
+                    <div
+                      class="invalid-feedback colorMessageErrors text-center"
+                      *ngIf="
+                        commentForm.get('comment')?.hasError('required') &&
+                        commentForm.get('comment')?.touched
+                      "
+                    >
+                      Required field
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="userId" class="form-label">User ID</label>
+                    <input
+                      [ngClass]="{
+                        'is-invalid':
+                          commentForm.get('userId')?.errors &&
+                          commentForm.get('userId')?.touched,
+                        'is-valid':
+                          commentForm.get('userId')?.touched &&
+                          commentForm.get('userId')?.valid
+                      }"
+                      type="text"
+                      class="form-control"
+                      id="userId"
+                      name="userId"
+                      placeholder="User id"
+                      formControlName="userId"
+                    />
+                    <div
+                      class="invalid-feedback colorMessageErrors text-center"
+                      *ngIf="
+                        commentForm.get('comment')?.hasError('required') &&
+                        commentForm.get('comment')?.touched
+                      "
+                    >
+                      Required field
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="tags" class="form-label">Tags</label>
+                    <select
+                      class="form-select"
+                      id="tags"
+                      name="tags"
+                      formControlName="tags"
+                    >
+                      <option value="Very important">Very important</option>
+                      <option value="Important">Important</option>
+                      <option value="Less important">Less important</option>
+                    </select>
+                  </div>
+                  <div class="row justify-content-end">
+                    <div
+                      class="col-md-12"
+                      style="padding-left: 80%; padding-top: 10px"
+                    >
+                      <button
+                        mat-raised-button
+                        color="primary"
+                        type="submit"
+                        [disabled]="!commentForm.valid"
+                      >
+                        Create
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>
