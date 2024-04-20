@@ -1,0 +1,10 @@
+@import "../sass/variables";
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+header,
+mat-toolbar {
+  width: 100%;
+}
